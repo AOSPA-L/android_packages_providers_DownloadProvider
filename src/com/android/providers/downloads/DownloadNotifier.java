@@ -37,7 +37,6 @@ import android.os.SystemClock;
 import android.provider.Downloads;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.text.format.Formatter;
 import android.util.Log;
 import android.util.LongSparseLongArray;
 
@@ -268,26 +267,8 @@ public class DownloadNotifier {
                         );
 
                         final long remainingMillis = ((total - current) * 1000) / speed;
-                        final int duration, durationResId;
-
-                        // This duplicates DateUtils.formatDuration(), but uses our
-                        // abbreviated plurals.
-                        if (remainingMillis >= DateUtils.HOUR_IN_MILLIS) {
-                            duration = (int) ((remainingMillis + 1800000)
-                                    / DateUtils.HOUR_IN_MILLIS);
-                            durationResId = R.plurals.duration_hours;
-                        } else if (remainingMillis >= DateUtils.MINUTE_IN_MILLIS) {
-                            duration = (int) ((remainingMillis + 30000)
-                                    / DateUtils.MINUTE_IN_MILLIS);
-                            durationResId = R.plurals.duration_minutes;
-                        } else {
-                            duration = (int) ((remainingMillis + 500)
-                                    / DateUtils.SECOND_IN_MILLIS);
-                            durationResId = R.plurals.duration_seconds;
-                        }
                         remainingText = res.getString(R.string.download_remaining,
-                                res.getQuantityString(durationResId, duration, duration));
-                        speedAsSizeText = Formatter.formatFileSize(mContext, speed);
+                                DateUtils.formatDuration(remainingMillis));
                     }
 
                     final int percent = (int) ((current * 100) / total);
